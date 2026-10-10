@@ -249,7 +249,7 @@ The manuscript is being prepared for public release. If you use this preview, pl
 ```bibtex
 @misc{liu2026game2realbench,
   title   = {Game2Real-Bench: Do Toy Games Reveal and Transfer to Real-World Visual Reasoning?},
-  author  = {Liu, Qing'an and Feng, Juntong and Zhu, Yue and Cheng, Yujie and Han, Xinzhe and Hao, Shuai and Zhuge, Yunzhi and Diao, Haiwen and Lu, Huchuan},
+  author  = {Liu, Qingan and Feng, Juntong and Zhu, Yue and Cheng, Yujie and Han, Xinzhe and Hao, Shuai and Zhuge, Yunzhi and Diao, Haiwen and Lu, Huchuan},
   year    = {2026}
 }
 ```
