@@ -242,14 +242,14 @@ Project-authored software is released under the [MIT License](LICENSE). Dataset 
 
 ## Contact
 
-- Qing'an Liu: <2223884741@mail.dlut.edu.cn>
+- Qingan Liu: <2223884741@mail.dlut.edu.cn>
 - Juntong Feng: <2253762636@mail.dlut.edu.cn>
 
 ## Citation
 
 The manuscript is being prepared for public release. If you use this preview, please cite:
 
-> Qing'an Liu, Juntong Feng, Yue Zhu, Yujie Cheng, Xinzhe Han, Shuai Hao, Yunzhi Zhuge, Haiwen Diao, and Huchuan Lu. *Game2Real-Bench: Do Toy Games Reveal and Transfer to Real-World Visual Reasoning?* 2026.
+> Qingan Liu, Juntong Feng, Yue Zhu, Yujie Cheng, Xinzhe Han, Shuai Hao, Yunzhi Zhuge, Haiwen Diao, and Huchuan Lu. *Game2Real-Bench: Do Toy Games Reveal and Transfer to Real-World Visual Reasoning?* 2026.
 
 ```bibtex
 @misc{liu2026game2realbench,
