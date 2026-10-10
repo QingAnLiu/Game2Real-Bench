@@ -9,7 +9,8 @@ __pycache__/
 .env.*
 dist/
 build/
-results/
+results/*
+!results/main_results.csv
 Game2Real-Bench-data/
 VLMEvalKit/output/
 VLMEvalKit/outputs/

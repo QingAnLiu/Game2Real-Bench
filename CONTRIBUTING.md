@@ -7,8 +7,7 @@ Thank you for helping improve Game2Real-Bench.
 1. Create a focused branch and keep unrelated changes separate.
 2. Install development dependencies with `python -m pip install -e ".[test]"`.
 3. Run `python -m pytest -q`.
-4. If the change affects released data or paths, run `scripts/validate_release.py` against a complete local dataset snapshot.
-5. Document changes to evaluator behavior or data fields in `docs/`.
+4. Update the root `README.md` when a change affects public usage, data fields, or evaluation behavior.
 
 ## Evaluation Changes
 

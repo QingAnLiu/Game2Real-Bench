@@ -8,24 +8,25 @@
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![CI](https://github.com/QingAnLiu/Game2Real-Bench/actions/workflows/ci.yml/badge.svg)](https://github.com/QingAnLiu/Game2Real-Bench/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/Code%20License-MIT-2ea44f)](LICENSE)
+[![Code License](https://img.shields.io/badge/Code%20License-MIT-2ea44f)](LICENSE)
 [![Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Private%20Preview-f3c742)](https://huggingface.co/datasets/liuqa/Game2Real-Bench)
+[![VLMEvalKit](https://img.shields.io/badge/Evaluation-VLMEvalKit-6f42c1)](VLMEvalKit)
 
-[Dataset](https://huggingface.co/datasets/liuqa/Game2Real-Bench) · [Quick Start](#quick-start) · [Evaluation](docs/EVALUATION.md) · [Data Format](docs/DATA_FORMAT.md) · [Citation](#citation)
+[Overview](#overview) · [Results](#results) · [Dataset](#dataset) · [Quick Start](#quick-start) · [VLMEvalKit](#vlmevalkit-evaluation) · [Citation](#citation)
 
 </div>
 
 ## Overview
 
-Game2Real-Bench studies whether the visual reasoning capabilities measured by controlled toy games correspond to those required by aligned real-world tasks. Rather than matching scenes by appearance, the benchmark connects the two settings through shared reasoning requirements: visual evidence, spatial operations, constraints, and state transitions.
+Game2Real-Bench asks a simple question: **do capabilities demonstrated in controlled visual games carry over to real-world visual reasoning?** Instead of matching scenes by appearance, it aligns the two settings through shared reasoning requirements: visual evidence, spatial operations, constraints, and state transitions.
 
-The benchmark contains **1,400 evaluation samples** organized around four capabilities: **Fine-grained Perception**, **Spatial Reasoning**, **Constraint Reasoning**, and **Sequential Planning**. Toy Game provides controllable generation and programmatically verified answers, while Real World preserves the diversity and ambiguity of natural visual settings.
+The benchmark contains **1,400 evaluation samples** across four capabilities. The Toy Game partition provides controllable generation and programmatically verified answers; the Real World partition tests the same capability groups in natural images, videos, and multi-view observations.
 
 <p align="center">
   <img src="assets/figures/construction_pipeline.png" width="100%" alt="Game2Real-Bench construction pipeline">
 </p>
 
-<p align="center"><em>Game2Real-Bench is constructed through capability-guided task design, procedural generation and verification, and mechanism-aligned real-world curation.</em></p>
+<p align="center"><em>Capability-guided task design, procedural generation and verification, and mechanism-aligned real-world curation.</em></p>
 
 ## Benchmark at a Glance
 
@@ -37,43 +38,116 @@ The benchmark contains **1,400 evaluation samples** organized around four capabi
 | Sequential Planning | 295 | 100 | 395 |
 | **Total** | **1,000** | **400** | **1,400** |
 
-- **Toy Game:** 18 tasks and 65 QA families, including 400 single-choice and 600 open-answer samples.
-- **Real World:** 400 capability-aligned samples using seven deterministic evaluator types.
-- **Images:** single-image and multi-image inputs are supported; image order is preserved by the dataset loader.
-- **Evaluation:** no external judge model is required for the released scoring pipeline.
-
-## Capability-aligned Design
+- **18 toy-game tasks** and **65 QA families**.
+- **400 single-choice** and **600 open-answer** Toy Game questions.
+- **400 Real World questions**, balanced across the four capabilities.
+- Deterministic, task-aware evaluation with no external judge model required.
+- Single-image and ordered multi-image inputs.
 
 <p align="center">
   <img src="assets/figures/capability_examples.png" width="100%" alt="Capability-aligned Toy Game and Real World examples">
 </p>
 
-The Toy Game and Real World partitions share a capability taxonomy while retaining their distinct visual domains. This enables evaluation at three levels: overall performance, capability-level performance, and task/subfield-level behavior.
+<p align="center"><em>Representative Toy Game and Real World tasks connected by shared reasoning requirements rather than visual similarity.</em></p>
 
-## Repository Structure
+## Results
 
-```text
-.
-├── assets/figures/              # README figures derived from the paper
-├── docs/                        # data-format and evaluation references
-├── examples/                    # example prediction file
-├── game2real/                   # portable loader and deterministic scorers
-├── VLMEvalKit/                  # bundled VLMEvalKit fork used by the benchmark
-│   ├── run.py                   # standard VLMEvalKit entry point
-│   ├── utils/
-│   │   └── prepare_game2real_data.py
-│   └── vlmeval/dataset/         # Game2Real dataset loaders and evaluators
-├── scripts/
-│   ├── download_data.py         # download the Hugging Face snapshot
-│   ├── build_dataset_release.py # rebuild a sanitized dataset release
-│   ├── run_evaluation.py        # score model predictions
-│   ├── validate_release.py      # validate code and data before release
-│   └── upload_code.ps1          # validate and publish the code repository
-├── tests/                       # unit tests for loading and scoring
-└── vlmevalkit_adapter/          # lightweight compatibility utilities
+We evaluate **25 representative vision-language models** on the complete benchmark. Scores are percentages. Toy Game and Real World scores are computed independently over their respective partitions; Overall is the sample-weighted score over all 1,400 samples.
+
+### Main Results
+
+| Model | Toy Game | Real World | Overall |
+|---|---:|---:|---:|
+| **Proprietary models** |  |  |  |
+| **GPT-5.6-Sol** | **73.90** | 59.48 | **69.8** |
+| Gemini-3.1-Pro-Preview | 59.00 | **61.28** | 59.6 |
+| Claude-Opus-4.8-thinking | 55.00 | 50.45 | 53.7 |
+| **Large open-weight models (27-35B)** |  |  |  |
+| **Qwen3.8-27B** | **50.30** | **58.20** | **52.6** |
+| Qwen3.5-35B-A3B | 40.40 | 56.30 | 45.0 |
+| Qwen3.5-27B | 42.40 | 51.15 | 44.9 |
+| Gemma4-31B-it | 34.70 | 47.87 | 38.5 |
+| Qwen3-VL-30B-A3B-Instruct | 16.50 | 35.03 | 21.8 |
+| InternVL3.5-30B-A3B | 16.40 | 32.40 | 21.0 |
+| **Medium open-weight models (7-12B)** |  |  |  |
+| **Qwen3.5-9B** | **31.90** | **45.33** | **35.7** |
+| Step3-VL-10B | 20.60 | 33.10 | 24.2 |
+| Gemma4-12B-it | 20.60 | 30.33 | 23.4 |
+| GLM-4.6V-Flash | 17.20 | 34.74 | 22.2 |
+| Ovis2.5-9B | 17.00 | 28.23 | 20.2 |
+| NEO-ov-9B | 15.30 | 27.93 | 18.9 |
+| InternVL3.5-8B | 15.10 | 28.03 | 18.8 |
+| SenseNova-U1-8B-MoT | 15.20 | 26.83 | 18.5 |
+| Qwen3-VL-8B-Instruct | 13.90 | 28.13 | 18.0 |
+| MiMo-VL-7B-RL | 14.40 | 24.28 | 17.2 |
+| NEO-9B-SFT | 13.60 | 25.40 | 17.0 |
+| **Small open-weight models (2-4B)** |  |  |  |
+| **Qwen3.5-4B** | **26.40** | **44.98** | **31.7** |
+| Qwen3.5-2B | 14.10 | 31.88 | 19.3 |
+| NEO-2B-SFT | 9.50 | 22.28 | 13.2 |
+| Qwen3-VL-2B-Instruct | 7.90 | 24.45 | 12.6 |
+| InternVL3.5-2B | 9.00 | 21.20 | 12.5 |
+
+Capability-level Toy Game / Real World scores are available in [`results/main_results.csv`](results/main_results.csv). The best result within each model group is bolded above.
+
+### Game-to-Real Correspondence
+
+Model-level Toy Game and Real World performance is strongly correlated across all 25 models: **Pearson r = 0.935** and **Spearman rho = 0.935** (both p < 0.001). Models that perform better in controlled games generally retain their advantage on real-world tasks, even though the visual domains differ substantially.
+
+<p align="center">
+  <img src="assets/figures/generated_real_correlation.png" width="78%" alt="Toy-game versus real-world model performance correlation">
+</p>
+
+### Thinking Mode
+
+Thinking mode improves performance for all four evaluated Qwen models, with larger gains at greater model scale.
+
+| Model | Thinking Off | Thinking On | Gain |
+|---|---:|---:|---:|
+| Qwen3.5-2B | 13.07 | 19.30 | +6.23 |
+| Qwen3.5-4B | 17.48 | 31.70 | +14.22 |
+| Qwen3.5-9B | 19.95 | 35.70 | +15.75 |
+| Qwen3.8-27B | 26.66 | 52.60 | +25.94 |
+
+<p align="center">
+  <img src="assets/figures/thinking_overall_grouped_bars.png" width="72%" alt="Thinking-mode gains across Qwen models">
+</p>
+
+### Game-to-Real Transfer
+
+We also test one-shot in-context learning by pairing each Real World target with a solved Toy Game example. Results are averaged over three demonstration assignments. Transfer is selective: constraint reasoning improves for three of four models, while fine-grained perception generally declines. Qwen3.5-9B is the only model with a positive overall mean gain.
+
+| Model | Zero-shot | 1-shot Mean | Change |
+|---|---:|---:|---:|
+| Qwen3.5-2B | 31.88 | 29.38 | -2.50 |
+| Qwen3.5-4B | 44.97 | 40.96 | -4.01 |
+| Qwen3.5-9B | 45.33 | 46.82 | **+1.49** |
+| Qwen3.8-27B | 58.21 | 57.88 | -0.33 |
+
+<p align="center">
+  <img src="assets/figures/icl_quadrant_vertical_points_polished.png" width="100%" alt="Capability-level one-shot game-to-real transfer">
+</p>
+
+## Dataset
+
+The data are hosted separately on Hugging Face:
+
+```python
+from datasets import load_dataset
+
+dataset = load_dataset("liuqa/Game2Real-Bench")
+toy_game = dataset["toy_game"]
+real_world = dataset["real_world"]
 ```
 
-This repository includes the VLMEvalKit fork used for benchmark inference and evaluation, together with the public-facing loaders, deterministic scorers, release builder, and validation utilities. Procedural game-generator source is maintained separately while its public-release scope is being decided.
+The repository contains two TSV tables:
+
+- `data/toy_game.tsv`: 1,000 Toy Game samples.
+- `data/real_world.tsv`: 400 Real World samples.
+
+Important fields include `id`, `question`, optional answer choices `A`-`F`, `answer`, `category`, `subfield`, `question_type`, `image_path`, and evaluator metadata. `image_path` is a JSON-encoded ordered list of repository-relative paths; preserve that order when constructing multimodal inputs.
+
+Dataset files contain source material under mixed upstream terms. Review `LICENSE_DATA.md`, `ATTRIBUTION.md`, and `manifests/sources.tsv` in the dataset repository before reuse or redistribution.
 
 ## Quick Start
 
@@ -83,12 +157,11 @@ This repository includes the VLMEvalKit fork used for benchmark inference and ev
 git clone https://github.com/QingAnLiu/Game2Real-Bench.git
 cd Game2Real-Bench
 python -m pip install -e ".[hub,test]"
-python -m pip install -e ./VLMEvalKit
 ```
 
-### 2. Authenticate and download the dataset
+### 2. Download the dataset
 
-The dataset is currently a private preview. Use a Hugging Face account with repository access:
+The dataset is currently a private preview. Authenticate with a Hugging Face account that has access:
 
 ```bash
 hf auth login
@@ -97,7 +170,7 @@ python scripts/download_data.py \
   --output-dir ./Game2Real-Bench-data
 ```
 
-### 3. Prepare predictions
+### 3. Evaluate predictions
 
 Prediction files may be JSON, JSONL, CSV, or TSV. Each row must contain `id` (or `index`) and `prediction`:
 
@@ -106,7 +179,7 @@ Prediction files may be JSON, JSONL, CSV, or TSV. Each row must contain `id` (or
 {"id": "toy-0002", "prediction": "C"}
 ```
 
-### 4. Run deterministic evaluation
+Run the deterministic evaluator:
 
 ```bash
 python scripts/run_evaluation.py \
@@ -116,16 +189,17 @@ python scripts/run_evaluation.py \
   --output-dir ./results/toy_game
 ```
 
-The evaluator writes:
+The evaluator writes aggregate metrics to `scores.json` and per-sample diagnostics to `detailed_results.jsonl`. The installed `game2real-evaluate` command provides the same interface. Official full-partition reporting should include all 1,000 Toy Game samples or all 400 Real World samples.
 
-- `scores.json`: aggregate scores overall and by benchmark taxonomy;
-- `detailed_results.jsonl`: normalized answers and per-sample correctness.
+## VLMEvalKit Evaluation
 
-See [Evaluation](docs/EVALUATION.md) for supported answer formats and [Data Format](docs/DATA_FORMAT.md) for the released schema.
+The repository includes the VLMEvalKit fork used for benchmark inference and evaluation. Install it after the Game2Real package:
 
-## VLMEvalKit Integration
+```bash
+python -m pip install -e ./VLMEvalKit
+```
 
-Prepare both benchmark partitions under `$LMUData` while preserving questions, answers, and image order:
+Prepare both partitions under `$LMUData` while preserving questions, answers, and image order:
 
 ```bash
 python VLMEvalKit/utils/prepare_game2real_data.py \
@@ -133,7 +207,7 @@ python VLMEvalKit/utils/prepare_game2real_data.py \
   --partition all
 ```
 
-Run inference through the bundled VLMEvalKit using the registered dataset names:
+Run inference with the registered dataset names:
 
 ```bash
 python VLMEvalKit/run.py \
@@ -141,37 +215,72 @@ python VLMEvalKit/run.py \
   --model <VLMEvalKit_MODEL_NAME>
 ```
 
-`Game2Real_ToyGame` uses the released Game2Real deterministic scorer, and `Game2Real_RealWorld` uses the seven deterministic evaluator families implemented in `real_world_final.py`. No API credential is stored in `VLMEvalKit/vlmeval/config.py`; configure model-provider credentials through environment variables when needed.
+| Dataset name | Samples | Evaluation |
+|---|---:|---|
+| `Game2Real_ToyGame` | 1,000 | Game2Real deterministic Toy Game scorer |
+| `Game2Real_RealWorld` | 400 | Seven task-aware Real World evaluator families |
 
-See [the bundled integration guide](VLMEvalKit/GAME2REAL.md) for data preparation, registered names, and evaluation behavior.
+No API credential is stored in `VLMEvalKit/vlmeval/config.py`; configure provider credentials through environment variables when required by a selected model.
 
-## Validation and Tests
+## Evaluation Protocol
+
+Toy Game single-choice responses are normalized to their final option letter. Open responses are checked against task-specific structured schemas and all released accepted answers. Real World samples use seven evaluator families: single-choice, short-text, numeric, canonical JSON, unordered JSON sets, ranking, and route planning. SpatiaLQA samples contribute normalized graph scores where applicable.
+
+For comparable results:
+
+- Preserve the image order in `image_path`.
+- Do not rewrite questions or options.
+- Record the evaluated partition, sample count, and dataset revision.
+- Use the released deterministic scorer rather than manual or model-judge scoring.
+
+## Repository Structure
+
+```text
+.
+├── assets/figures/              # figures used in this README
+├── examples/                    # example prediction file
+├── game2real/                   # portable loader and deterministic scorers
+├── results/main_results.csv     # capability-level results for 25 models
+├── scripts/
+│   ├── download_data.py         # download the Hugging Face dataset
+│   └── run_evaluation.py        # score model predictions
+├── tests/                       # unit tests for loading and scoring
+└── VLMEvalKit/                  # bundled evaluation toolkit
+    ├── run.py
+    ├── utils/prepare_game2real_data.py
+    └── vlmeval/dataset/         # Game2Real registrations and evaluators
+```
+
+Procedural generators and task-specific verifiers are maintained as a separate release candidate while their public scope is being finalized.
+
+## Testing
 
 ```bash
 python -m pytest -q
-
-python scripts/validate_release.py \
-  --dataset-root ../dataset \
-  --code-root .
 ```
 
-The release validator checks sample counts, image references, sample-ID naming, capability directories, portable paths, evaluator resources, and repository hygiene.
+The tests cover dataset loading, prediction validation, answer normalization, evaluator dispatch, and aggregate scoring.
 
-## Data and Licensing
+## License
 
-Project-authored software in this repository is released under the [MIT License](LICENSE). Dataset files are distributed separately and contain source material under mixed upstream terms; the software license does not apply to dataset images. Review the dataset repository's `LICENSE_DATA.md`, `ATTRIBUTION.md`, and source manifest before reuse or redistribution.
-
-See [Third-Party Licenses](THIRD_PARTY_LICENSES.md) for software-side notices.
+Project-authored software is released under the [MIT License](LICENSE). Dataset images and annotations are distributed separately under mixed upstream terms; the software license does not relicense them. See [Third-Party Licenses](THIRD_PARTY_LICENSES.md) for software-side notices.
 
 ## Citation
 
-The manuscript is currently being prepared for public release. If you use this private preview, please cite:
+The manuscript is being prepared for public release. If you use this preview, please cite:
 
 > Qing'an Liu, Juntong Feng, Yue Zhu, Yujie Cheng, Xinzhe Han, Shuai Hao, Yunzhi Zhuge, Haiwen Diao, and Huchuan Lu. *Game2Real-Bench: Do Toy Games Reveal and Transfer to Real-World Visual Reasoning?* 2026.
 
-A final BibTeX entry will be added when the manuscript is publicly available. Repository citation metadata are also provided in [`CITATION.cff`](CITATION.cff).
+```bibtex
+@misc{liu2026game2realbench,
+  title   = {Game2Real-Bench: Do Toy Games Reveal and Transfer to Real-World Visual Reasoning?},
+  author  = {Liu, Qing'an and Feng, Juntong and Zhu, Yue and Cheng, Yujie and Han, Xinzhe and Hao, Shuai and Zhuge, Yunzhi and Diao, Haiwen and Lu, Huchuan},
+  year    = {2026}
+}
+```
+
+Repository citation metadata are also provided in [`CITATION.cff`](CITATION.cff).
 
 ## Acknowledgements
 
-Game2Real-Bench builds on the open-source multimodal evaluation ecosystem. We thank the maintainers of VLMEvalKit and the upstream datasets documented in the companion dataset repository.
-
+Game2Real-Bench builds on the open-source multimodal evaluation ecosystem. We thank the maintainers of [VLMEvalKit](https://github.com/open-compass/VLMEvalKit) and the upstream datasets documented in the companion dataset repository.
