@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use Game2Real-Bench, please cite the benchmark manuscript and this software release."
+title: "Game2Real-Bench"
+type: software
+version: 1.0.0
+license: MIT
+repository-code: "https://github.com/QingAnLiu/Game2Real-Bench"
+url: "https://huggingface.co/datasets/liuqa/Game2Real-Bench"
+authors:
+  - given-names: "Qing'an"
+    family-names: Liu
+  - given-names: Juntong
+    family-names: Feng
+  - given-names: Yue
+    family-names: Zhu
+  - given-names: Yujie
+    family-names: Cheng
+  - given-names: Xinzhe
+    family-names: Han
+  - given-names: Shuai
+    family-names: Hao
+  - given-names: Yunzhi
+    family-names: Zhuge
+  - given-names: Haiwen
+    family-names: Diao
+  - given-names: Huchuan
+    family-names: Lu
+

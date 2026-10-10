@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.superpowers/
+.DS_Store
+.venv/
+.env
+.env.*
+dist/
+build/
+results/
+Game2Real-Bench-data/
+VLMEvalKit/output/
+VLMEvalKit/outputs/
