@@ -17,6 +17,9 @@ def test_bundled_vlmevalkit_registers_game2real() -> None:
     assert "Game2RealRealWorldDataset" in registry
     assert 'TOY_DATASET = "Game2Real_ToyGame"' in integration
     assert 'REAL_WORLD_DATASET = "Game2Real_RealWorld"' in integration
+    assert "from .utils.game2real import real as real_evaluator" in integration
+    assert "from .utils.game2real import toy as toy_evaluator" in integration
+    assert "game2real.runner" not in integration
 
 
 def test_vlmevalkit_config_contains_no_literal_credentials() -> None:
@@ -25,3 +28,9 @@ def test_vlmevalkit_config_contains_no_literal_credentials() -> None:
     ast.parse(text)
     assert "os.environ.get('O1_API_KEY', '')" in text
     assert not re.search(r"(?i)(?:sk-|hf_)[A-Za-z0-9_-]{16,}", text)
+
+
+def test_release_has_only_vlmevalkit_evaluation_entrypoint() -> None:
+    assert not (ROOT / "scripts" / "run_evaluation.py").exists()
+    assert not (ROOT / "game2real").exists()
+    assert (ROOT / "VLMEvalKit" / "run.py").is_file()

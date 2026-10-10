@@ -52,7 +52,7 @@ The benchmark contains **1,400 evaluation samples** across four capabilities. Th
 
 ## Results
 
-We evaluate **25 representative vision-language models** on the complete benchmark. Scores are percentages. Toy Game and Real World scores are computed independently over their respective partitions; Overall is the sample-weighted score over all 1,400 samples.
+We report **25 representative vision-language models** on the complete benchmark. Scores are percentages. Toy Game and Real World scores are computed independently over their respective partitions; Overall is the sample-weighted score over all 1,400 samples.
 
 ### Main Results
 
@@ -151,12 +151,12 @@ Dataset files contain source material under mixed upstream terms. Review `LICENS
 
 ## Quick Start
 
-### 1. Install
+### 1. Install the bundled VLMEvalKit
 
 ```bash
 git clone https://github.com/QingAnLiu/Game2Real-Bench.git
 cd Game2Real-Bench
-python -m pip install -e ".[hub,test]"
+python -m pip install -e ./VLMEvalKit
 ```
 
 ### 2. Download the dataset
@@ -165,41 +165,14 @@ The dataset is currently a private preview. Authenticate with a Hugging Face acc
 
 ```bash
 hf auth login
-python scripts/download_data.py \
-  --repo-id liuqa/Game2Real-Bench \
-  --output-dir ./Game2Real-Bench-data
+hf download liuqa/Game2Real-Bench \
+  --repo-type dataset \
+  --local-dir ./Game2Real-Bench-data
 ```
 
-### 3. Evaluate predictions
+### 3. Prepare and evaluate
 
-Prediction files may be JSON, JSONL, CSV, or TSV. Each row must contain `id` (or `index`) and `prediction`:
-
-```json
-{"id": "toy-0001", "prediction": "D"}
-{"id": "toy-0002", "prediction": "C"}
-```
-
-Run the deterministic evaluator:
-
-```bash
-python scripts/run_evaluation.py \
-  --dataset-root ./Game2Real-Bench-data \
-  --partition toy_game \
-  --predictions ./predictions.jsonl \
-  --output-dir ./results/toy_game
-```
-
-The evaluator writes aggregate metrics to `scores.json` and per-sample diagnostics to `detailed_results.jsonl`. The installed `game2real-evaluate` command provides the same interface. Official full-partition reporting should include all 1,000 Toy Game samples or all 400 Real World samples.
-
-## VLMEvalKit Evaluation
-
-The repository includes the VLMEvalKit fork used for benchmark inference and evaluation. Install it after the Game2Real package:
-
-```bash
-python -m pip install -e ./VLMEvalKit
-```
-
-Prepare both partitions under `$LMUData` while preserving questions, answers, and image order:
+Convert the downloaded tables to VLMEvalKit's local data layout. The utility resolves image paths without changing question text, answers, or image order:
 
 ```bash
 python VLMEvalKit/utils/prepare_game2real_data.py \
@@ -215,16 +188,20 @@ python VLMEvalKit/run.py \
   --model <VLMEvalKit_MODEL_NAME>
 ```
 
+Inference and official scoring both run through VLMEvalKit; there is no separate Game2Real evaluation command. VLMEvalKit writes per-sample evaluation records and an `_acc.csv` capability summary next to each model output.
+
 | Dataset name | Samples | Evaluation |
 |---|---:|---|
 | `Game2Real_ToyGame` | 1,000 | Game2Real deterministic Toy Game scorer |
 | `Game2Real_RealWorld` | 400 | Seven task-aware Real World evaluator families |
 
-No API credential is stored in `VLMEvalKit/vlmeval/config.py`; configure provider credentials through environment variables when required by a selected model.
+No API credential is stored in `VLMEvalKit/vlmeval/config.py`. Configure provider credentials through environment variables only when the selected inference model requires them; Game2Real scoring itself is fully local.
 
 ## Evaluation Protocol
 
-Toy Game single-choice responses are normalized to their final option letter. Open responses are checked against task-specific structured schemas and all released accepted answers. Real World samples use seven evaluator families: single-choice, short-text, numeric, canonical JSON, unordered JSON sets, ranking, and route planning. SpatiaLQA samples contribute normalized graph scores where applicable.
+Toy Game evaluation first isolates the model's final committed answer from common reasoning and answer wrappers. Single-choice responses are reduced to one option letter; open responses are compared with the canonical answer and released structured `accepted_answers`. An incomplete reasoning trace without a final commitment receives no credit.
+
+Real World samples use seven evaluator families: single-choice, short-text, numeric, ordered JSON, unordered JSON sets, ranking, and route planning. SpatiaLQA samples use semantic graph matching and report the mean of content F1 and precondition F1. Reviewed semantic decisions are shipped as a versioned local resource, so evaluation does not depend on model names or an external judge.
 
 For comparable results:
 
@@ -238,17 +215,14 @@ For comparable results:
 ```text
 .
 ├── assets/figures/              # figures used in this README
-├── examples/                    # example prediction file
-├── game2real/                   # portable loader and deterministic scorers
 ├── results/main_results.csv     # capability-level results for 25 models
-├── scripts/
-│   ├── download_data.py         # download the Hugging Face dataset
-│   └── run_evaluation.py        # score model predictions
-├── tests/                       # unit tests for loading and scoring
+├── tests/                       # evaluator and release-integrity tests
 └── VLMEvalKit/                  # bundled evaluation toolkit
     ├── run.py
     ├── utils/prepare_game2real_data.py
-    └── vlmeval/dataset/         # Game2Real registrations and evaluators
+    └── vlmeval/dataset/
+        ├── game2real_bench.py   # public dataset registrations
+        └── utils/game2real/     # official deterministic evaluators
 ```
 
 Procedural generators and task-specific verifiers are maintained as a separate release candidate while their public scope is being finalized.
@@ -256,10 +230,11 @@ Procedural generators and task-specific verifiers are maintained as a separate r
 ## Testing
 
 ```bash
+python -m pip install pytest numpy pandas openpyxl
 python -m pytest -q
 ```
 
-The tests cover dataset loading, prediction validation, answer normalization, evaluator dispatch, and aggregate scoring.
+The tests cover final-answer extraction, accepted-answer structures, all Real World evaluator families, SpatiaLQA graph scoring, registration, and credential hygiene.
 
 ## License
 

@@ -134,7 +134,7 @@ def infer_mixedqa_question_image_roles(line, question_paths):
             roles.append(f'{view_name} view of the same cylinder model.')
         return roles
 
-    # Legacy safeguard only. The corrected Final1000 TSV uses only the annotated
+    # Legacy safeguard only. The released Toy Game TSV uses only the annotated
     # question image for region-based Hidden Object items.
     if subfield == 'hidden_object' and len(question_paths) == 2:
         return [

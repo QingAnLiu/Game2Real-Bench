@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "description": "Reviewed SpatiaLQA pair decisions, scoped to the exact normalized prediction graph that was inspected.",
+  "rules": [
+    {
+      "sample_id": "real-0221",
+      "prediction_sha256": "fd31572f3d40bd3a5ea1d25b9685084a6748cc90ebe4ee0186914bc27c4d2658",
+      "ground_truth": "Pick up the white wire",
+      "prediction": "Remove the white wire from the black bag",
+      "match": 0,
+      "reason": "The white wire is on the sofa under the black wire, not inside the black bag."
+    },
+    {
+      "sample_id": "real-0221",
+      "prediction_sha256": "576ee96d1c9e3fb7174b03910878d14755df72fa1da670de836c4d033a291234",
+      "ground_truth": "Pick up the white wire",
+      "prediction": "Remove the white wire from the black bag",
+      "match": 0,
+      "reason": "The white wire is on the sofa under the black wire, not inside the black bag."
+    },
+    {
+      "sample_id": "real-0221",
+      "prediction_sha256": "32b862879550d5d11dc586c280b61996d17c3e8d22724f5619d45fea76cd5eee",
+      "ground_truth": "Pick up the white wire",
+      "prediction": "Remove the white wire from the box",
+      "match": 0,
+      "reason": "The white wire is on the sofa and is not being removed from a box."
+    },
+    {
+      "sample_id": "real-0225",
+      "prediction_sha256": "e88d4137295a6935c03eaa5edb0d9e9cedbd272af7bf332717f2e4a0e32c3863",
+      "ground_truth": "Pick up the ham sausage",
+      "prediction": "Remove the ham sausage from the microwave",
+      "match": 0,
+      "reason": "Post-heating removal is not the initial pickup step."
+    },
+    {
+      "sample_id": "real-0225",
+      "prediction_sha256": "e88d4137295a6935c03eaa5edb0d9e9cedbd272af7bf332717f2e4a0e32c3863",
+      "ground_truth": "Put the ham sausage in the microwave",
+      "prediction": "Place the ham sausage on the glass tray",
+      "match": 1,
+      "reason": "Placing the sausage on the pictured appliance tray is the insertion step."
+    },
+    {
+      "sample_id": "real-0225",
+      "prediction_sha256": "b0e130dabb1c1ef2ab43810832d4eb29562035b1e87ae3a69061e6dc78479727",
+      "ground_truth": "Pick up the ham sausage",
+      "prediction": "Remove the heated ham sausage from the toaster oven",
+      "match": 0,
+      "reason": "Post-heating removal is not the initial pickup step."
+    },
+    {
+      "sample_id": "real-0225",
+      "prediction_sha256": "b0e130dabb1c1ef2ab43810832d4eb29562035b1e87ae3a69061e6dc78479727",
+      "ground_truth": "Put the ham sausage in the microwave",
+      "prediction": "Place the ham sausage inside the toaster oven",
+      "match": 1,
+      "reason": "Toaster oven and microwave denote the pictured appliance in this sample."
+    }
+  ]
+}

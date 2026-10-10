@@ -25,8 +25,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
-      - name: Install package and tests
-        run: python -m pip install -e ".[test]"
+      - name: Install evaluator test dependencies
+        run: python -m pip install pytest numpy pandas openpyxl
 
       - name: Run unit tests
         run: python -m pytest -q
@@ -34,6 +34,8 @@ jobs:
       - name: Compile Game2Real VLMEvalKit integration
         run: |
           python -m py_compile VLMEvalKit/vlmeval/dataset/game2real_bench.py
+          python -m py_compile VLMEvalKit/vlmeval/dataset/utils/game2real/toy.py
+          python -m py_compile VLMEvalKit/vlmeval/dataset/utils/game2real/real.py
           python -m py_compile VLMEvalKit/vlmeval/dataset/image_mixedqa.py
           python -m py_compile VLMEvalKit/vlmeval/dataset/real_world_final.py
           python -m py_compile VLMEvalKit/utils/prepare_game2real_data.py
