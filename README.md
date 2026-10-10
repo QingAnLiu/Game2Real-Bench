@@ -12,7 +12,7 @@
 [![Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Private%20Preview-f3c742)](https://huggingface.co/datasets/liuqa/Game2Real-Bench)
 [![VLMEvalKit](https://img.shields.io/badge/Evaluation-VLMEvalKit-6f42c1)](VLMEvalKit)
 
-[Overview](#overview) · [Results](#results) · [Dataset](#dataset) · [Quick Start](#quick-start) · [VLMEvalKit](#vlmevalkit-evaluation) · [Citation](#citation)
+[Overview](#overview) · [Results](#results) · [Dataset](#dataset) · [Quick Start](#quick-start) · [VLMEvalKit](#vlmevalkit-evaluation) · [Contact](#contact) · [Citation](#citation)
 
 </div>
 
@@ -239,6 +239,11 @@ The tests cover final-answer extraction, accepted-answer structures, all Real Wo
 ## License
 
 Project-authored software is released under the [MIT License](LICENSE). Dataset images and annotations are distributed separately under mixed upstream terms; the software license does not relicense them. See [Third-Party Licenses](THIRD_PARTY_LICENSES.md) for software-side notices.
+
+## Contact
+
+- Qing'an Liu: <2223884741@mail.dlut.edu.cn>
+- Juntong Feng: <2253762636@mail.dlut.edu.cn>
 
 ## Citation
 
