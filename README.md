@@ -247,10 +247,6 @@ Project-authored software is released under the [MIT License](LICENSE). Dataset 
 
 ## Citation
 
-The manuscript is being prepared for public release. If you use this preview, please cite:
-
-> Qingan Liu, Juntong Feng, Yue Zhu, Yujie Cheng, Xinzhe Han, Shuai Hao, Yunzhi Zhuge, Haiwen Diao, and Huchuan Lu. *Game2Real-Bench: Do Toy Games Reveal and Transfer to Real-World Visual Reasoning?* 2026.
-
 ```bibtex
 @misc{liu2026game2realbench,
   title   = {Game2Real-Bench: Do Toy Games Reveal and Transfer to Real-World Visual Reasoning?},
@@ -259,8 +255,3 @@ The manuscript is being prepared for public release. If you use this preview, pl
 }
 ```
 
-Repository citation metadata are also provided in [`CITATION.cff`](CITATION.cff).
-
-## Acknowledgements
-
-Game2Real-Bench builds on the open-source multimodal evaluation ecosystem. We thank the maintainers of [VLMEvalKit](https://github.com/open-compass/VLMEvalKit) and the upstream datasets documented in the companion dataset repository.
