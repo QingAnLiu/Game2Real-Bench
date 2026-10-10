@@ -7,7 +7,7 @@ license: MIT
 repository-code: "https://github.com/QingAnLiu/Game2Real-Bench"
 url: "https://huggingface.co/datasets/liuqa/Game2Real-Bench"
 authors:
-  - given-names: "Qing'an"
+  - given-names: "Qingan"
     family-names: Liu
   - given-names: Juntong
     family-names: Feng
